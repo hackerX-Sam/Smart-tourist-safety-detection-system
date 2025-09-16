@@ -4,9 +4,11 @@ import MobileApp from './components/MobileApp';
 import PanicAlert from './components/PanicAlert';
 import AuthorityDashboard from './components/AuthorityDashboard';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 
 const AppContent: React.FC = () => {
   const { isDarkMode, toggleDarkMode } = useTheme();
+  const { t } = useLanguage();
 
   const [currentView, setCurrentView] = useState<'mobile' | 'panic' | 'dashboard'>('mobile');
   const [showPanicAlert, setShowPanicAlert] = useState(false);
@@ -28,7 +30,7 @@ const AppContent: React.FC = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Shield className="w-8 h-8 text-blue-600" />
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Smart Tourist Safety System</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">{t.appTitle}</h1>
           </div>
           
           <div className="flex gap-4">
@@ -37,7 +39,7 @@ const AppContent: React.FC = () => {
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
             >
               {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              {isDarkMode ? 'Light' : 'Dark'}
+              {isDarkMode ? t.light : t.dark}
             </button>
             
             <button
@@ -49,7 +51,7 @@ const AppContent: React.FC = () => {
               }`}
             >
               <Smartphone className="w-5 h-5" />
-              Mobile App
+              {t.mobileApp}
             </button>
             
             <button
@@ -61,7 +63,7 @@ const AppContent: React.FC = () => {
               }`}
             >
               <Shield className="w-5 h-5" />
-              Panic Alert
+              {t.panicAlert}
             </button>
             
             <button
@@ -73,7 +75,7 @@ const AppContent: React.FC = () => {
               }`}
             >
               <Monitor className="w-5 h-5" />
-              Authority Dashboard
+              {t.authorityDashboard}
             </button>
           </div>
         </div>
@@ -84,7 +86,7 @@ const AppContent: React.FC = () => {
         {currentView === 'mobile' && (
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Tourist Mobile App</h2>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t.mobileApp}</h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
                 Comprehensive safety monitoring with Digital ID, real-time location tracking, 
                 emergency response, and AI-powered safety scoring for tourists.
@@ -115,7 +117,7 @@ const AppContent: React.FC = () => {
         {currentView === 'panic' && (
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-red-700 mb-4">Emergency Response Flow</h2>
+              <h2 className="text-3xl font-bold text-red-700 mb-4">{t.panicAlert} Flow</h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
                 Automated emergency response system with real-time coordination between tourists, 
                 local authorities, and emergency services.
@@ -129,7 +131,7 @@ const AppContent: React.FC = () => {
                 <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg border border-gray-200 dark:border-gray-700 max-w-md transition-colors duration-300">
                   <div className="text-center">
                     <Shield className="w-16 h-16 text-red-500 mx-auto mb-4" />
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Emergency Response System</h3>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{t.panicAlert} System</h3>
                     <p className="text-gray-600 dark:text-gray-300 mb-6">
                       This demonstrates the emergency response flow when a tourist activates the panic button.
                     </p>
@@ -137,7 +139,7 @@ const AppContent: React.FC = () => {
                       onClick={handlePanicTrigger}
                       className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl"
                     >
-                      Simulate Emergency Alert
+                      Simulate {t.emergencyAlert}
                     </button>
                   </div>
                 </div>
@@ -175,7 +177,9 @@ const AppContent: React.FC = () => {
 function App() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
     </ThemeProvider>
   );
 }
