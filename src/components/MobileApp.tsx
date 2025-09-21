@@ -57,6 +57,9 @@ const MobileApp: React.FC<MobileAppProps> = ({ onPanicTrigger }) => {
               className="bg-transparent border border-white/30 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/50"
             >
               <option value="EN" className="bg-gray-800">EN</option>
+              <option value="fr" className="bg-gray-800">FR</option>
+              <option value="de" className="bg-gray-800">DE</option>
+              <option value="ja" className="bg-gray-800">日本</option>
               <option value="hi" className="bg-gray-800">हिं</option>
               <option value="ES" className="bg-gray-800">ES</option>
             </select>

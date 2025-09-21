@@ -11,6 +11,7 @@ const PanicAlert: React.FC<PanicAlertProps> = ({ onClose }) => {
   const [step, setStep] = useState(0);
   const [countdown, setCountdown] = useState(5);
   const [responseTime, setResponseTime] = useState(0);
+  const [callInitiated, setCallInitiated] = useState(false);
 
   useEffect(() => {
     if (step === 0 && countdown > 0) {
@@ -20,6 +21,8 @@ const PanicAlert: React.FC<PanicAlertProps> = ({ onClose }) => {
       return () => clearTimeout(timer);
     } else if (step === 0 && countdown === 0) {
       setStep(1);
+      // Initiate emergency call
+      initiateEmergencyCall();
     }
   }, [countdown, step]);
 
@@ -32,6 +35,23 @@ const PanicAlert: React.FC<PanicAlertProps> = ({ onClose }) => {
     }
   }, [step]);
 
+  const initiateEmergencyCall = () => {
+    if (!callInitiated) {
+      setCallInitiated(true);
+      // Create a hidden link to initiate the call
+      const phoneNumber = "8822683839";
+      const callLink = document.createElement('a');
+      callLink.href = `tel:+91${phoneNumber}`;
+      callLink.style.display = 'none';
+      document.body.appendChild(callLink);
+      
+      // Trigger the call
+      setTimeout(() => {
+        callLink.click();
+        document.body.removeChild(callLink);
+      }, 1000);
+    }
+  };
   const handleCancel = () => {
     setStep(-1);
     setTimeout(onClose, 1000);

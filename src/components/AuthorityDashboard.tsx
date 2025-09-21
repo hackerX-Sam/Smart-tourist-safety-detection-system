@@ -14,6 +14,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import GoogleMap from './GoogleMap';
 
 const AuthorityDashboard: React.FC = () => {
   const { t } = useLanguage();
@@ -61,11 +62,47 @@ const AuthorityDashboard: React.FC = () => {
   ];
 
   const touristClusters = [
-    { zone: t.indiaGate, count: 342, risk: t.low, safety: 85 },
-    { zone: t.redFort, count: 289, risk: t.medium, safety: 72 },
-    { zone: t.connaught, count: 156, risk: t.low, safety: 91 },
-    { zone: t.chandniChowk, count: 198, risk: t.high, risk_reason: t.constructionArea, safety: 58 },
-    { zone: t.lotusTemple, count: 262, risk: t.low, safety: 88 }
+    { 
+      id: '1',
+      zone: t.indiaGate, 
+      count: 342, 
+      risk: t.low, 
+      safety: 85,
+      position: { lat: 28.6129, lng: 77.2295 }
+    },
+    { 
+      id: '2',
+      zone: t.redFort, 
+      count: 289, 
+      risk: t.medium, 
+      safety: 72,
+      position: { lat: 28.6562, lng: 77.2410 }
+    },
+    { 
+      id: '3',
+      zone: t.connaught, 
+      count: 156, 
+      risk: t.low, 
+      safety: 91,
+      position: { lat: 28.6315, lng: 77.2167 }
+    },
+    { 
+      id: '4',
+      zone: t.chandniChowk, 
+      count: 198, 
+      risk: t.high, 
+      risk_reason: t.constructionArea, 
+      safety: 58,
+      position: { lat: 28.6506, lng: 77.2334 }
+    },
+    { 
+      id: '5',
+      zone: t.lotusTemple, 
+      count: 262, 
+      risk: t.low, 
+      safety: 88,
+      position: { lat: 28.5535, lng: 77.2588 }
+    }
   ];
 
   const getSeverityColor = (severity: string) => {
@@ -86,6 +123,9 @@ const AuthorityDashboard: React.FC = () => {
     }
   };
 
+  const handleClusterClick = (cluster: any) => {
+    console.log('Cluster clicked:', cluster);
+  };
   return (
     <div className="bg-gray-100 dark:bg-gray-900 min-h-screen p-3 sm:p-6 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
@@ -190,31 +230,11 @@ const AuthorityDashboard: React.FC = () => {
               </div>
             </div>
             
-            {/* Simulated Map with Clusters */}
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 h-48 sm:h-64 relative border dark:border-gray-600 transition-colors duration-300">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-green-100 rounded-lg opacity-50"></div>
-              
-              {/* Tourist Clusters */}
-              <div className="absolute top-8 left-12">
-                <div className="bg-green-500 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse">342</div>
-                <span className="text-xs bg-white dark:bg-gray-800 dark:text-white px-2 py-1 rounded shadow mt-1 block">{t.indiaGate}</span>
-              </div>
-              
-              <div className="absolute top-16 right-20">
-                <div className="bg-yellow-500 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold">289</div>
-                <span className="text-xs bg-white dark:bg-gray-800 dark:text-white px-2 py-1 rounded shadow mt-1 block">{t.redFort}</span>
-              </div>
-              
-              <div className="absolute bottom-16 left-8">
-                <div className="bg-green-500 w-4 h-4 rounded-full flex items-center justify-center text-white text-xs">156</div>
-                <span className="text-xs bg-white dark:bg-gray-800 dark:text-white px-2 py-1 rounded shadow mt-1 block">{t.connaught}</span>
-              </div>
-              
-              <div className="absolute bottom-8 right-16">
-                <div className="bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse">198</div>
-                <span className="text-xs bg-white dark:bg-gray-800 dark:text-white px-2 py-1 rounded shadow mt-1 block">{t.chandniChowk}</span>
-              </div>
-            </div>
+            {/* Google Maps Integration */}
+            <GoogleMap 
+              clusters={touristClusters} 
+              onClusterClick={handleClusterClick}
+            />
 
             {/* Zone Details */}
             <div className="mt-4 space-y-2">
