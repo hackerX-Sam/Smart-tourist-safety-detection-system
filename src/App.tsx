@@ -1,17 +1,29 @@
 import React, { useState } from 'react';
-import { Smartphone, Shield, Monitor, Moon, Sun } from 'lucide-react';
+import { Smartphone, Shield, Monitor, Moon, Sun, LogOut, User } from 'lucide-react';
 import MobileApp from './components/MobileApp';
 import PanicAlert from './components/PanicAlert';
 import AuthorityDashboard from './components/AuthorityDashboard';
+import LoginPage from './components/LoginPage';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 
-const AppContent: React.FC = () => {
+const AuthenticatedApp: React.FC = () => {
   const { isDarkMode, toggleDarkMode } = useTheme();
   const { t } = useLanguage();
+  const { user, logout } = useAuth();
 
   const [currentView, setCurrentView] = useState<'mobile' | 'panic' | 'dashboard'>('mobile');
   const [showPanicAlert, setShowPanicAlert] = useState(false);
+
+  // Set initial view based on user type
+  React.useEffect(() => {
+    if (user?.type === 'authority') {
+      setCurrentView('dashboard');
+    } else {
+      setCurrentView('mobile');
+    }
+  }, [user]);
 
   const handlePanicTrigger = () => {
     setShowPanicAlert(true);
@@ -30,10 +42,21 @@ const AppContent: React.FC = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Shield className="w-8 h-8 text-blue-600" />
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">{t.appTitle}</h1>
+            <div>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white">{t.appTitle}</h1>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Welcome, {user?.name} ({user?.type === 'tourist' ? 'Tourist' : 'Authority'})
+              </p>
+            </div>
           </div>
           
           <div className="flex gap-4">
+            {/* User Profile */}
+            <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
+              <span className="text-lg">{user?.avatar}</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{user?.name}</span>
+            </div>
+            
             <button
               onClick={toggleDarkMode}
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
@@ -42,7 +65,7 @@ const AppContent: React.FC = () => {
               {isDarkMode ? t.light : t.dark}
             </button>
             
-            <button
+            {(user?.type === 'tourist' || currentView === 'mobile') && <button
               onClick={() => setCurrentView('mobile')}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                 currentView === 'mobile' 
@@ -52,9 +75,9 @@ const AppContent: React.FC = () => {
             >
               <Smartphone className="w-5 h-5" />
               {t.mobileApp}
-            </button>
+            </button>}
             
-            <button
+            {(user?.type === 'tourist' || currentView === 'panic') && <button
               onClick={() => setCurrentView('panic')}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                 currentView === 'panic' 
@@ -64,9 +87,9 @@ const AppContent: React.FC = () => {
             >
               <Shield className="w-5 h-5" />
               {t.panicAlert}
-            </button>
+            </button>}
             
-            <button
+            {(user?.type === 'authority' || currentView === 'dashboard') && <button
               onClick={() => setCurrentView('dashboard')}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                 currentView === 'dashboard' 
@@ -76,6 +99,14 @@ const AppContent: React.FC = () => {
             >
               <Monitor className="w-5 h-5" />
               {t.authorityDashboard}
+            </button>}
+            
+            <button
+              onClick={logout}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
+            >
+              <LogOut className="w-5 h-5" />
+              Logout
             </button>
           </div>
         </div>
@@ -83,7 +114,7 @@ const AppContent: React.FC = () => {
 
       {/* Main Content */}
       <div className="py-8 px-4">
-        {currentView === 'mobile' && (
+        {currentView === 'mobile' && user?.type === 'tourist' && (
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t.mobileApp}</h2>
@@ -114,7 +145,7 @@ const AppContent: React.FC = () => {
           </div>
         )}
 
-        {currentView === 'panic' && (
+        {currentView === 'panic' && user?.type === 'tourist' && (
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-red-700 mb-4">{t.panicAlert} Flow</h2>
@@ -148,7 +179,7 @@ const AppContent: React.FC = () => {
           </div>
         )}
 
-        {currentView === 'dashboard' && (
+        {(currentView === 'dashboard' || user?.type === 'authority') && (
           <div>
             <AuthorityDashboard />
           </div>
@@ -174,13 +205,36 @@ const AppContent: React.FC = () => {
   );
 };
 
+const AppContent: React.FC = () => {
+  const { isAuthenticated, isLoading, login } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-300">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <LoginPage onLogin={login} />;
+  }
+
+  return <AuthenticatedApp />;
+};
+
 function App() {
   return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <AppContent />
-      </LanguageProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <LanguageProvider>
+          <AppContent />
+        </LanguageProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 
