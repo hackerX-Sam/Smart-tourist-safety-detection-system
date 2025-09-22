@@ -22,15 +22,66 @@ const AuthorityDashboard: React.FC = () => {
   const [touristCount, setTouristCount] = useState(1247);
   const [lastUpdate, setLastUpdate] = useState(new Date());
   const [selectedTourist, setSelectedTourist] = useState<string | null>(null);
+  const [selectedCluster, setSelectedCluster] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setLastUpdate(new Date());
       setTouristCount(prev => prev + Math.floor(Math.random() * 3) - 1);
+      // Simulate real-time cluster updates
+      setTouristClusters(prev => prev.map(cluster => ({
+        ...cluster,
+        count: Math.max(50, cluster.count + Math.floor(Math.random() * 10) - 5),
+        safety: Math.max(40, Math.min(95, cluster.safety + Math.floor(Math.random() * 6) - 3))
+      })));
     }, 5000);
     return () => clearInterval(timer);
   }, []);
 
+  const [touristClusters, setTouristClusters] = useState([
+    { 
+      id: '1',
+      zone: t.indiaGate, 
+      count: 342, 
+      risk: t.low, 
+      safety: 85,
+      position: { lat: 28.6129, lng: 77.2295 }
+    },
+    { 
+      id: '2',
+      zone: t.redFort, 
+      count: 289, 
+      risk: t.medium, 
+      safety: 72,
+      position: { lat: 28.6562, lng: 77.2410 }
+    },
+    { 
+      id: '3',
+      zone: t.connaught, 
+      count: 156, 
+      risk: t.low, 
+      safety: 91,
+      position: { lat: 28.6315, lng: 77.2167 }
+    },
+    { 
+      id: '4',
+      zone: t.chandniChowk, 
+      count: 198, 
+      risk: t.high, 
+      riskReason: t.constructionArea, 
+      safety: 58,
+      position: { lat: 28.6506, lng: 77.2334 }
+    },
+    { 
+      id: '5',
+      zone: t.lotusTemple, 
+      count: 262, 
+      risk: t.low, 
+      safety: 88,
+      position: { lat: 28.5535, lng: 77.2588 }
+    }
+  ]);
   const alertData = [
     {
       id: 'ALERT-001',
@@ -61,49 +112,6 @@ const AuthorityDashboard: React.FC = () => {
     }
   ];
 
-  const touristClusters = [
-    { 
-      id: '1',
-      zone: t.indiaGate, 
-      count: 342, 
-      risk: t.low, 
-      safety: 85,
-      position: { lat: 28.6129, lng: 77.2295 }
-    },
-    { 
-      id: '2',
-      zone: t.redFort, 
-      count: 289, 
-      risk: t.medium, 
-      safety: 72,
-      position: { lat: 28.6562, lng: 77.2410 }
-    },
-    { 
-      id: '3',
-      zone: t.connaught, 
-      count: 156, 
-      risk: t.low, 
-      safety: 91,
-      position: { lat: 28.6315, lng: 77.2167 }
-    },
-    { 
-      id: '4',
-      zone: t.chandniChowk, 
-      count: 198, 
-      risk: t.high, 
-      risk_reason: t.constructionArea, 
-      safety: 58,
-      position: { lat: 28.6506, lng: 77.2334 }
-    },
-    { 
-      id: '5',
-      zone: t.lotusTemple, 
-      count: 262, 
-      risk: t.low, 
-      safety: 88,
-      position: { lat: 28.5535, lng: 77.2588 }
-    }
-  ];
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -124,7 +132,17 @@ const AuthorityDashboard: React.FC = () => {
   };
 
   const handleClusterClick = (cluster: any) => {
-    console.log('Cluster clicked:', cluster);
+    setSelectedCluster(cluster.id);
+    // Simulate focusing on cluster data
+    console.log('Focusing on cluster:', cluster.zone, 'with', cluster.count, 'tourists');
+  };
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    // Simulate data refresh
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setLastUpdate(new Date());
+    setIsRefreshing(false);
   };
   return (
     <div className="bg-gray-100 dark:bg-gray-900 min-h-screen p-3 sm:p-6 transition-colors duration-300">
@@ -141,8 +159,12 @@ const AuthorityDashboard: React.FC = () => {
                 <p className="text-sm text-gray-500 dark:text-gray-400">{t.lastUpdated}</p>
                 <p className="font-medium text-gray-900 dark:text-white">{lastUpdate.toLocaleTimeString()}</p>
               </div>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-                <RefreshCw className="w-4 h-4" />
+              <button 
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+              >
+                <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
                 {t.refresh}
               </button>
             </div>
@@ -234,17 +256,31 @@ const AuthorityDashboard: React.FC = () => {
             <GoogleMap 
               clusters={touristClusters} 
               onClusterClick={handleClusterClick}
+              selectedCluster={selectedCluster}
             />
 
             {/* Zone Details */}
             <div className="mt-4 space-y-2">
               {touristClusters.map((cluster, index) => (
-                <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg gap-2 transition-colors duration-300">
+                <div 
+                  key={index} 
+                  onClick={() => setSelectedCluster(cluster.id)}
+                  className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 rounded-lg gap-2 transition-all duration-300 cursor-pointer hover:shadow-md ${
+                    selectedCluster === cluster.id 
+                      ? 'bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-700' 
+                      : 'bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600'
+                  }`}
+                >
                   <div className="flex items-center gap-3">
                     <div className={`w-3 h-3 ${getRiskColor(cluster.risk)} rounded-full`}></div>
                     <div>
                       <span className="font-medium text-gray-900 dark:text-white">{cluster.zone}</span>
                       <span className="text-sm text-gray-600 dark:text-gray-300 ml-2">({cluster.count} {t.tourists})</span>
+                      {cluster.riskReason && (
+                        <div className="text-xs text-orange-600 dark:text-orange-400 mt-1">
+                          ⚠️ {cluster.riskReason}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -252,6 +288,12 @@ const AuthorityDashboard: React.FC = () => {
                     <span className={`px-2 py-1 rounded text-xs font-medium ${getSeverityColor(cluster.risk).replace('text-', 'text-').replace('bg-', 'bg-')}`}>
                       {cluster.risk}
                     </span>
+                    {selectedCluster === cluster.id && (
+                      <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
+                        <Eye className="w-4 h-4" />
+                        <span className="text-xs">Selected</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
