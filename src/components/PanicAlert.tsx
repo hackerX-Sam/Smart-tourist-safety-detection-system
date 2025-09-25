@@ -45,6 +45,11 @@ const PanicAlert: React.FC<PanicAlertProps> = ({ onClose }) => {
       callLink.style.display = 'none';
       document.body.appendChild(callLink);
       
+      // Add haptic feedback
+      if (navigator.vibrate) {
+        navigator.vibrate([300, 200, 300]);
+      }
+      
       // Trigger the call
       setTimeout(() => {
         callLink.click();
@@ -146,6 +151,10 @@ const PanicAlert: React.FC<PanicAlertProps> = ({ onClose }) => {
             <div className="bg-gray-800/50 rounded-xl p-4 mb-6">
               <h3 className="text-sm font-medium mb-3">{t.emergencyResponseTeam}</h3>
               <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span>{t.emergencyContact}:</span>
+                  <span className="text-red-300 font-mono">+91 8822683839</span>
+                </div>
                 <div className="flex justify-between">
                   <span>{t.unitId}:</span>
                   <span className="text-yellow-300">DCP-457</span>

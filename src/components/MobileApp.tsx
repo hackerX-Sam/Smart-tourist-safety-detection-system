@@ -10,6 +10,8 @@ const MobileApp: React.FC<MobileAppProps> = ({ onPanicTrigger }) => {
   const { language, setLanguage, t } = useLanguage();
   const [safetyScore, setSafetyScore] = useState(85);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [isEmergencyActive, setIsEmergencyActive] = useState(false);
+  const [callInitiated, setCallInitiated] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -30,6 +32,40 @@ const MobileApp: React.FC<MobileAppProps> = ({ onPanicTrigger }) => {
     if (score >= 80) return 'bg-green-500';
     if (score >= 60) return 'bg-yellow-500';
     return 'bg-red-500';
+  };
+
+  const handleEmergencyCall = () => {
+    if (isEmergencyActive || callInitiated) return;
+    
+    setIsEmergencyActive(true);
+    setCallInitiated(true);
+    
+    // Create emergency call link
+    const emergencyNumber = "918822683839";
+    const callLink = document.createElement('a');
+    callLink.href = `tel:+${emergencyNumber}`;
+    callLink.style.display = 'none';
+    document.body.appendChild(callLink);
+    
+    // Add haptic feedback for mobile devices
+    if (navigator.vibrate) {
+      navigator.vibrate([200, 100, 200, 100, 200]);
+    }
+    
+    // Trigger the call immediately
+    setTimeout(() => {
+      callLink.click();
+      document.body.removeChild(callLink);
+      
+      // Also trigger the panic alert flow
+      onPanicTrigger();
+      
+      // Reset states after a delay
+      setTimeout(() => {
+        setIsEmergencyActive(false);
+        setCallInitiated(false);
+      }, 3000);
+    }, 100);
   };
 
   return (
@@ -144,15 +180,50 @@ const MobileApp: React.FC<MobileAppProps> = ({ onPanicTrigger }) => {
 
         {/* Panic Button */}
         <button
-          onClick={onPanicTrigger}
-          className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-red-600/50 active:scale-95"
+          onClick={handleEmergencyCall}
+          disabled={isEmergencyActive}
+          className={`w-full font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 transition-all duration-200 transform shadow-lg active:scale-95 ${
+            isEmergencyActive 
+              ? 'bg-red-800 text-red-200 cursor-not-allowed animate-pulse' 
+              : 'bg-red-600 hover:bg-red-700 text-white hover:scale-105 hover:shadow-red-600/50 active:shadow-red-700/60'
+          } 
+          focus:outline-none focus:ring-4 focus:ring-red-500/50 
+          sm:py-5 sm:text-lg
+          touch-manipulation select-none`}
+          style={{ 
+            minHeight: '60px',
+            WebkitTapHighlightColor: 'transparent',
+            WebkitUserSelect: 'none',
+            userSelect: 'none'
+          }}
         >
-          <AlertTriangle className="w-6 h-6" />
-          {t.emergencyPanicButton}
+          <AlertTriangle className={`w-6 h-6 sm:w-7 sm:h-7 ${isEmergencyActive ? 'animate-bounce' : ''}`} />
+          <span className="font-extrabold tracking-wide">
+            {isEmergencyActive ? 'CALLING EMERGENCY...' : t.emergencyPanicButton}
+          </span>
         </button>
         
-        <p className="text-xs text-center text-gray-400 mt-2">
-          {t.tapForEmergencyResponse}
+        <div className="text-center mt-3 space-y-1">
+          <p className="text-xs text-gray-400">
+            {isEmergencyActive ? 'Emergency call initiated to +91 8822683839' : t.tapForEmergencyResponse}
+          </p>
+          <p className="text-xs text-red-400 font-medium">
+            🚨 Direct call to: +91 8822683839
+          </p>
+        </div>
+        
+        {/* Emergency Instructions */}
+        <div className="mt-4 bg-red-900/30 border border-red-500/30 rounded-xl p-3">
+          <h4 className="text-xs font-semibold text-red-300 mb-2 flex items-center gap-1">
+            <AlertTriangle className="w-3 h-3" />
+            Emergency Protocol
+          </h4>
+          <ul className="text-xs text-red-200 space-y-1">
+            <li>• Calls emergency contact immediately</li>
+            <li>• Shares your live location</li>
+            <li>• Alerts local authorities</li>
+            <li>• Activates emergency response</li>
+          </ul>
         </p>
       </div>
     </div>

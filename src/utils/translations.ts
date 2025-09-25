@@ -45,6 +45,7 @@ export interface Translations {
   unitId: string;
   eta: string;
   officer: string;
+  emergencyContact: string;
   safetyInstructions: string;
   stayAtCurrentLocation: string;
   keepPhoneChargedAccessible: string;
@@ -162,6 +163,7 @@ export const translations: Record<string, Translations> = {
     unitId: "Unit ID",
     eta: "ETA",
     officer: "Officer",
+    emergencyContact: "Emergency Contact",
     safetyInstructions: "Safety Instructions",
     stayAtCurrentLocation: "• Stay at your current location",
     keepPhoneChargedAccessible: "• Keep your phone charged and accessible",
@@ -275,6 +277,7 @@ export const translations: Record<string, Translations> = {
     unitId: "ID d'Unité",
     eta: "Heure d'Arrivée",
     officer: "Officier",
+    emergencyContact: "Contact d'Urgence",
     safetyInstructions: "Instructions de Sécurité",
     stayAtCurrentLocation: "• Restez à votre emplacement actuel",
     keepPhoneChargedAccessible: "• Gardez votre téléphone chargé et accessible",
@@ -388,6 +391,7 @@ export const translations: Record<string, Translations> = {
     unitId: "Einheits-ID",
     eta: "Ankunftszeit",
     officer: "Beamter",
+    emergencyContact: "Notfallkontakt",
     safetyInstructions: "Sicherheitsanweisungen",
     stayAtCurrentLocation: "• Bleiben Sie an Ihrem aktuellen Standort",
     keepPhoneChargedAccessible: "• Halten Sie Ihr Telefon geladen und zugänglich",
@@ -501,6 +505,7 @@ export const translations: Record<string, Translations> = {
     unitId: "ユニットID",
     eta: "到着予定時刻",
     officer: "担当者",
+    emergencyContact: "緊急連絡先",
     safetyInstructions: "安全指示",
     stayAtCurrentLocation: "• 現在の場所にとどまる",
     keepPhoneChargedAccessible: "• 電話を充電し、アクセス可能にしておく",
@@ -614,6 +619,7 @@ export const translations: Record<string, Translations> = {
     unitId: "यूनिट ID",
     eta: "ETA",
     officer: "अधिकारी",
+    emergencyContact: "आपातकालीन संपर्क",
     safetyInstructions: "सुरक्षित रहने के निर्देश",
     stayAtCurrentLocation: "• अपने वर्तमान स्थान पर रहें",
     keepPhoneChargedAccessible: "• अपना फोन चार्ज और पहुंच में रखें",
@@ -727,6 +733,7 @@ export const translations: Record<string, Translations> = {
     unitId: "ID de Unidad",
     eta: "Tiempo Estimado",
     officer: "Oficial",
+    emergencyContact: "Contacto de Emergencia",
     safetyInstructions: "Instrucciones de Seguridad",
     stayAtCurrentLocation: "• Permanece en tu ubicación actual",
     keepPhoneChargedAccessible: "• Mantén tu teléfono cargado y accesible",
