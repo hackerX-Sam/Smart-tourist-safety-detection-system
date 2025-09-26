@@ -4,6 +4,7 @@ import MobileApp from './components/MobileApp';
 import PanicAlert from './components/PanicAlert';
 import AuthorityDashboard from './components/AuthorityDashboard';
 import LoginPage from './components/LoginPage';
+import LaunchAnimation from './components/LaunchAnimation';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -207,7 +208,16 @@ const AuthenticatedApp: React.FC = () => {
 
 const AppContent: React.FC = () => {
   const { isAuthenticated, isLoading, login } = useAuth();
+  const [showLaunchAnimation, setShowLaunchAnimation] = useState(true);
 
+  // Show launch animation on first load
+  const handleLaunchComplete = () => {
+    setShowLaunchAnimation(false);
+  };
+
+  if (showLaunchAnimation) {
+    return <LaunchAnimation onComplete={handleLaunchComplete} />;
+  }
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
