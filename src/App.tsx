@@ -4,6 +4,7 @@ import MobileApp from './components/MobileApp';
 import PanicAlert from './components/PanicAlert';
 import AuthorityDashboard from './components/AuthorityDashboard';
 import LoginPage from './components/LoginPage';
+import RegistrationPage from './components/RegistrationPage';
 import LaunchAnimation from './components/LaunchAnimation';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
@@ -209,6 +210,7 @@ const AuthenticatedApp: React.FC = () => {
 const AppContent: React.FC = () => {
   const { isAuthenticated, isLoading, login } = useAuth();
   const [showLaunchAnimation, setShowLaunchAnimation] = useState(true);
+  const [showRegistration, setShowRegistration] = useState(false);
 
   // Show launch animation on first load
   const handleLaunchComplete = () => {
@@ -218,6 +220,7 @@ const AppContent: React.FC = () => {
   if (showLaunchAnimation) {
     return <LaunchAnimation onComplete={handleLaunchComplete} />;
   }
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
@@ -230,7 +233,20 @@ const AppContent: React.FC = () => {
   }
 
   if (!isAuthenticated) {
-    return <LoginPage onLogin={login} />;
+    if (showRegistration) {
+      return (
+        <RegistrationPage 
+          onRegistrationComplete={() => setShowRegistration(false)}
+          onBackToLogin={() => setShowRegistration(false)}
+        />
+      );
+    }
+    return (
+      <LoginPage 
+        onLogin={login} 
+        onShowRegistration={() => setShowRegistration(true)}
+      />
+    );
   }
 
   return <AuthenticatedApp />;

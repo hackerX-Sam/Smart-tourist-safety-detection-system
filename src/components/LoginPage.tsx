@@ -5,9 +5,10 @@ import { useTheme } from '../contexts/ThemeContext';
 
 interface LoginPageProps {
   onLogin: (userType: 'tourist' | 'authority') => void;
+  onShowRegistration: () => void;
 }
 
-const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
+const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onShowRegistration }) => {
   const { language, setLanguage, t } = useLanguage();
   const { isDarkMode, toggleDarkMode } = useTheme();
   const [userType, setUserType] = useState<'tourist' | 'authority'>('tourist');
@@ -235,6 +236,19 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                 )}
               </button>
             </form>
+
+            {/* Registration Link */}
+            <div className="mt-6 text-center">
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
+                Don't have an account?{' '}
+                <button
+                  onClick={onShowRegistration}
+                  className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors"
+                >
+                  Register here
+                </button>
+              </p>
+            </div>
 
             {/* Demo Credentials */}
             <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
