@@ -239,8 +239,14 @@ const AuthorityDashboard: React.FC = () => {
           {/* Interactive Map */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors duration-300">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{t.liveTouristClusters}</h2>
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{t.liveTouristClusters}</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-300">Satellite view with real-time positioning</p>
+              </div>
               <div className="flex gap-2">
+                <div className="bg-blue-100 dark:bg-blue-900/30 px-3 py-1 rounded-lg">
+                  <span className="text-xs font-medium text-blue-700 dark:text-blue-300">🛰️ Satellite Mode</span>
+                </div>
                 <button className="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 px-3 py-1 rounded-lg text-sm flex items-center gap-2 text-gray-700 dark:text-gray-300 transition-colors">
                   <Filter className="w-4 h-4" />
                   {t.filter}
@@ -252,7 +258,7 @@ const AuthorityDashboard: React.FC = () => {
               </div>
             </div>
             
-            {/* Google Maps Integration */}
+            {/* Google Satellite Maps Integration */}
             <GoogleMap 
               clusters={touristClusters} 
               onClusterClick={handleClusterClick}
@@ -370,12 +376,14 @@ const AuthorityDashboard: React.FC = () => {
             <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 transition-colors duration-300">
               <div className="flex items-center gap-2 mb-2">
                 <Activity className="w-5 h-5 text-blue-600" />
-                <span className="font-medium text-blue-900 dark:text-blue-300">{t.aiAnomalyDetection}</span>
+                <span className="font-medium text-blue-900 dark:text-blue-300">🛰️ {t.aiAnomalyDetection}</span>
               </div>
               <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
                 <li>• {t.unusualCrowdDensity}</li>
                 <li>• {t.weatherWarning}</li>
                 <li>• {t.patternAnalysis}</li>
+                <li>• Satellite imagery analysis: Clear visibility conditions</li>
+                <li>• Heat signature monitoring: Normal tourist movement patterns</li>
               </ul>
             </div>
           </div>

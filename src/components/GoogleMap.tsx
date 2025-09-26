@@ -48,7 +48,9 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
       mapInstanceRef.current = new google.maps.Map(mapRef.current, {
         zoom: 11,
         center,
+        mapTypeId: google.maps.MapTypeId.SATELLITE,
         styles: [
+          // Enhanced satellite view styles
           {
             featureType: 'poi',
             elementType: 'labels',
@@ -60,14 +62,14 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
             stylers: [{ visibility: 'on' }]
           },
           {
-            featureType: 'road',
-            elementType: 'geometry',
-            stylers: [{ color: '#f5f5f5' }]
+            featureType: 'administrative',
+            elementType: 'labels',
+            stylers: [{ visibility: 'on' }]
           },
           {
-            featureType: 'water',
-            elementType: 'geometry',
-            stylers: [{ color: '#c9c9c9' }]
+            featureType: 'road',
+            elementType: 'labels',
+            stylers: [{ visibility: 'on' }]
           }
         ],
         mapTypeControl: true,
@@ -75,8 +77,14 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
         fullscreenControl: true,
         zoomControl: true,
         mapTypeControlOptions: {
-          style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+          style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
           position: google.maps.ControlPosition.TOP_CENTER,
+          mapTypeIds: [
+            google.maps.MapTypeId.ROADMAP,
+            google.maps.MapTypeId.SATELLITE,
+            google.maps.MapTypeId.HYBRID,
+            google.maps.MapTypeId.TERRAIN
+          ]
         },
         zoomControlOptions: {
           position: google.maps.ControlPosition.RIGHT_CENTER,
@@ -134,9 +142,9 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
           path: google.maps.SymbolPath.CIRCLE,
           scale: isSelected ? Math.max(12, Math.min(25, cluster.count / 8)) : Math.max(8, Math.min(20, cluster.count / 10)),
           fillColor: riskColor,
-          fillOpacity: isHighRisk ? 0.9 : 0.8,
-          strokeColor: isSelected ? '#ffffff' : (isHighRisk ? '#ffffff' : '#ffffff'),
-          strokeWeight: isSelected ? 4 : 2,
+          fillOpacity: isHighRisk ? 0.95 : 0.85,
+          strokeColor: isSelected ? '#ffffff' : '#ffffff',
+          strokeWeight: isSelected ? 4 : 3,
           strokeOpacity: 1,
         },
         animation: isHighRisk ? google.maps.Animation.BOUNCE : undefined,
@@ -293,7 +301,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
       
       {/* Map Legend */}
       <div className="absolute top-2 left-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-3 border border-gray-200 dark:border-gray-600">
-        <h4 className="text-xs font-semibold text-gray-900 dark:text-white mb-2">Risk Levels</h4>
+        <h4 className="text-xs font-semibold text-gray-900 dark:text-white mb-2">Tourist Clusters</h4>
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-red-500 rounded-full"></div>
@@ -307,13 +315,17 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
             <span className="text-xs text-gray-700 dark:text-gray-300">{t.low} Risk</span>
           </div>
+          <div className="pt-1 border-t border-gray-200 dark:border-gray-600">
+            <div className="text-xs text-gray-500 dark:text-gray-400">Satellite View</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">Real-time Tracking</div>
+          </div>
         </div>
       </div>
 
       {/* Live Data Indicator */}
       <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
         <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-        LIVE
+        LIVE SAT
       </div>
     </div>
   );
