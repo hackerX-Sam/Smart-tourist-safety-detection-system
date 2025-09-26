@@ -42,44 +42,102 @@ const AuthorityDashboard: React.FC = () => {
   const [touristClusters, setTouristClusters] = useState([
     { 
       id: '1',
-      zone: t.indiaGate, 
-      count: 342, 
-      risk: t.low, 
+      zone: 'India Gate', 
+      count: 342,
+      risk: 'LOW', 
       safety: 85,
       position: { lat: 28.6129, lng: 77.2295 }
     },
     { 
       id: '2',
-      zone: t.redFort, 
-      count: 289, 
-      risk: t.medium, 
+      zone: 'Red Fort', 
+      count: 289,
+      risk: 'MEDIUM', 
       safety: 72,
       position: { lat: 28.6562, lng: 77.2410 }
     },
     { 
       id: '3',
-      zone: t.connaught, 
-      count: 156, 
-      risk: t.low, 
+      zone: 'Connaught Place', 
+      count: 156,
+      risk: 'LOW', 
       safety: 91,
       position: { lat: 28.6315, lng: 77.2167 }
     },
     { 
       id: '4',
-      zone: t.chandniChowk, 
-      count: 198, 
-      risk: t.high, 
-      riskReason: t.constructionArea, 
+      zone: 'Chandni Chowk', 
+      count: 198,
+      risk: 'HIGH', 
+      riskReason: 'Construction work in progress - Heavy machinery present', 
       safety: 58,
       position: { lat: 28.6506, lng: 77.2334 }
     },
     { 
       id: '5',
-      zone: t.lotusTemple, 
-      count: 262, 
-      risk: t.low, 
+      zone: 'Lotus Temple', 
+      count: 262,
+      risk: 'LOW', 
       safety: 88,
       position: { lat: 28.5535, lng: 77.2588 }
+    },
+    { 
+      id: '6',
+      zone: 'Qutub Minar', 
+      count: 184,
+      risk: 'LOW', 
+      safety: 82,
+      position: { lat: 28.5245, lng: 77.1855 }
+    },
+    { 
+      id: '7',
+      zone: 'Humayun\'s Tomb', 
+      count: 127,
+      risk: 'LOW', 
+      safety: 89,
+      position: { lat: 28.5933, lng: 77.2507 }
+    },
+    { 
+      id: '8',
+      zone: 'Akshardham Temple', 
+      count: 395,
+      risk: 'MEDIUM', 
+      riskReason: 'High crowd density during evening hours',
+      safety: 76,
+      position: { lat: 28.6127, lng: 77.2773 }
+    },
+    { 
+      id: '9',
+      zone: 'Jama Masjid', 
+      count: 213,
+      risk: 'MEDIUM', 
+      safety: 74,
+      position: { lat: 28.6507, lng: 77.2334 }
+    },
+    { 
+      id: '10',
+      zone: 'Raj Ghat', 
+      count: 89,
+      risk: 'LOW', 
+      safety: 93,
+      position: { lat: 28.6418, lng: 77.2493 }
+    },
+    { 
+      id: '11',
+      zone: 'Karol Bagh Market', 
+      count: 267,
+      risk: 'HIGH', 
+      riskReason: 'Pickpocketing incidents reported - Dense market area',
+      safety: 62,
+      position: { lat: 28.6519, lng: 77.1909 }
+    },
+    { 
+      id: '12',
+      zone: 'Lajpat Nagar Market', 
+      count: 178,
+      risk: 'MEDIUM', 
+      safety: 71,
+      position: { lat: 28.5677, lng: 77.2436 }
     }
   ]);
   const alertData = [
@@ -266,7 +324,7 @@ const AuthorityDashboard: React.FC = () => {
             />
 
             {/* Zone Details */}
-            <div className="mt-4 space-y-2">
+            <div className="mt-4 space-y-2 max-h-64 overflow-y-auto">
               {touristClusters.map((cluster, index) => (
                 <div 
                   key={index} 

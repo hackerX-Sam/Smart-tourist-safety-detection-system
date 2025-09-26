@@ -42,34 +42,39 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
     if (!mapRef.current || mapInstanceRef.current) return;
 
     try {
-      // Center on New Delhi with better positioning
+      // Center on New Delhi with better positioning for tourist areas
       const center = { lat: 28.6139, lng: 77.2090 };
 
       mapInstanceRef.current = new google.maps.Map(mapRef.current, {
-        zoom: 11,
+        zoom: 12,
         center,
         mapTypeId: google.maps.MapTypeId.SATELLITE,
         styles: [
-          // Enhanced satellite view styles
+          // Enhanced satellite view styles for better tourist location visibility
           {
-            featureType: 'poi',
+            featureType: 'poi.attraction',
             elementType: 'labels',
-            stylers: [{ visibility: 'on' }]
+            stylers: [{ visibility: 'on' }, { color: '#ffffff' }]
           },
           {
-            featureType: 'transit',
+            featureType: 'poi.park',
             elementType: 'labels',
-            stylers: [{ visibility: 'on' }]
+            stylers: [{ visibility: 'on' }, { color: '#ffffff' }]
           },
           {
-            featureType: 'administrative',
+            featureType: 'transit.station',
             elementType: 'labels',
-            stylers: [{ visibility: 'on' }]
+            stylers: [{ visibility: 'on' }, { color: '#ffffff' }]
           },
           {
-            featureType: 'road',
+            featureType: 'road.arterial',
             elementType: 'labels',
-            stylers: [{ visibility: 'on' }]
+            stylers: [{ visibility: 'on' }, { color: '#ffffff' }]
+          },
+          {
+            featureType: 'administrative.locality',
+            elementType: 'labels',
+            stylers: [{ visibility: 'on' }, { color: '#ffffff' }]
           }
         ],
         mapTypeControl: true,
@@ -140,11 +145,11 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
         title: `${cluster.zone}: ${cluster.count} ${t.tourists}`,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          scale: isSelected ? Math.max(12, Math.min(25, cluster.count / 8)) : Math.max(8, Math.min(20, cluster.count / 10)),
+          scale: isSelected ? Math.max(15, Math.min(30, cluster.count / 6)) : Math.max(10, Math.min(25, cluster.count / 8)),
           fillColor: riskColor,
           fillOpacity: isHighRisk ? 0.95 : 0.85,
-          strokeColor: isSelected ? '#ffffff' : '#ffffff',
-          strokeWeight: isSelected ? 4 : 3,
+          strokeColor: '#ffffff',
+          strokeWeight: isSelected ? 5 : 4,
           strokeOpacity: 1,
         },
         animation: isHighRisk ? google.maps.Animation.BOUNCE : undefined,
@@ -153,15 +158,15 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
 
       // Create detailed info window content
       const infoContent = `
-        <div class="p-4 min-w-[280px] max-w-[320px]">
+        <div class="p-4 min-w-[300px] max-w-[350px]">
           <div class="flex items-center justify-between mb-3">
             <h3 class="font-bold text-lg text-gray-900">${cluster.zone}</h3>
-            <span class="px-2 py-1 rounded-full text-xs font-medium" style="background-color: ${riskColor}20; color: ${riskColor}">
+            <span class="px-3 py-1 rounded-full text-xs font-medium" style="background-color: ${riskColor}20; color: ${riskColor}">
               ${cluster.risk.toUpperCase()}
             </span>
           </div>
           
-          <div class="space-y-2 text-sm">
+          <div class="space-y-3 text-sm">
             <div class="flex justify-between items-center">
               <span class="text-gray-600">${t.tourists}:</span>
               <span class="font-semibold text-gray-900">${cluster.count}</span>
@@ -170,7 +175,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
             <div class="flex justify-between items-center">
               <span class="text-gray-600">${t.safety}:</span>
               <div class="flex items-center gap-2">
-                <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div class="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div class="h-full rounded-full" style="width: ${cluster.safety}%; background-color: ${riskColor}"></div>
                 </div>
                 <span class="font-semibold" style="color: ${riskColor}">${cluster.safety}%</span>
@@ -178,28 +183,30 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
             </div>
             
             ${cluster.riskReason ? `
-              <div class="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded">
+              <div class="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <div class="flex items-center gap-2">
                   <span class="text-yellow-600">⚠️</span>
-                  <span class="text-xs text-yellow-800">${cluster.riskReason}</span>
+                  <span class="text-xs text-yellow-800 font-medium">${cluster.riskReason}</span>
                 </div>
               </div>
             ` : ''}
             
-            <div class="mt-3 pt-2 border-t border-gray-200">
-              <div class="text-xs text-gray-500">
-                📍 ${cluster.position.lat.toFixed(4)}°N, ${cluster.position.lng.toFixed(4)}°E
+            <div class="mt-3 pt-3 border-t border-gray-200">
+              <div class="text-xs text-gray-500 space-y-1">
+                <div>📍 ${cluster.position.lat.toFixed(4)}°N, ${cluster.position.lng.toFixed(4)}°E</div>
+                <div>🛰️ Satellite tracking active</div>
+                <div>📡 Last update: ${new Date().toLocaleTimeString()}</div>
               </div>
             </div>
           </div>
           
           <div class="mt-4 flex gap-2">
             <button onclick="window.viewClusterDetails('${cluster.id}')" 
-                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs font-medium transition-colors">
+                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-xs font-medium transition-colors">
               ${t.viewDetails || 'View Details'}
             </button>
             <button onclick="window.contactCluster('${cluster.id}')" 
-                    class="flex-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-xs font-medium transition-colors">
+                    class="flex-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-xs font-medium transition-colors">
               ${t.contact || 'Contact'}
             </button>
           </div>
@@ -233,7 +240,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
       const cluster = clusters.find(c => c.id === clusterId);
       if (cluster) {
         // Simulate contacting the cluster
-        alert(`Contacting patrol unit at ${cluster.zone}...`);
+        alert(`Contacting patrol unit at ${cluster.zone}...\nDispatching emergency response team.`);
       }
     };
   };
@@ -254,7 +261,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
       if (cluster) {
         // Pan to selected cluster
         mapInstanceRef.current.panTo(cluster.position);
-        mapInstanceRef.current.setZoom(13);
+        mapInstanceRef.current.setZoom(15);
         
         // Trigger click to show info window
         google.maps.event.trigger(marker, 'click');
@@ -264,7 +271,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
 
   if (mapError) {
     return (
-      <div className="w-full h-64 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-center justify-center border border-red-200 dark:border-red-800">
+      <div className="w-full h-80 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-center justify-center border border-red-200 dark:border-red-800">
         <div className="text-center">
           <div className="text-red-500 mb-2">⚠️</div>
           <p className="text-sm text-red-600 dark:text-red-400">{mapError}</p>
@@ -281,10 +288,10 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
 
   if (!isLoaded) {
     return (
-      <div className="w-full h-64 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+      <div className="w-full h-80 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Loading Google Maps...</p>
+          <p className="text-sm text-gray-600 dark:text-gray-300">Loading Google Satellite Maps...</p>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Connecting to live tourist data...</p>
         </div>
       </div>
@@ -295,16 +302,18 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
     <div className="relative">
       <div 
         ref={mapRef} 
-        className="w-full h-64 rounded-lg border dark:border-gray-600 shadow-sm"
-        style={{ minHeight: '256px' }}
+        className="w-full h-80 rounded-lg border dark:border-gray-600 shadow-lg"
+        style={{ minHeight: '320px' }}
       />
       
-      {/* Map Legend */}
-      <div className="absolute top-2 left-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-3 border border-gray-200 dark:border-gray-600">
-        <h4 className="text-xs font-semibold text-gray-900 dark:text-white mb-2">Tourist Clusters</h4>
+      {/* Enhanced Map Legend */}
+      <div className="absolute top-3 left-3 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg p-3 border border-gray-200 dark:border-gray-600">
+        <h4 className="text-xs font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-1">
+          🛰️ Tourist Clusters
+        </h4>
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
             <span className="text-xs text-gray-700 dark:text-gray-300">{t.high} Risk</span>
           </div>
           <div className="flex items-center gap-2">
@@ -316,16 +325,32 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ clusters, onClusterClick, selecte
             <span className="text-xs text-gray-700 dark:text-gray-300">{t.low} Risk</span>
           </div>
           <div className="pt-1 border-t border-gray-200 dark:border-gray-600">
-            <div className="text-xs text-gray-500 dark:text-gray-400">Satellite View</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">Real-time Tracking</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">📡 Live Tracking</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">🗺️ Satellite View</div>
           </div>
         </div>
       </div>
 
       {/* Live Data Indicator */}
-      <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+      <div className="absolute top-3 right-3 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-lg">
         <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
         LIVE SAT
+      </div>
+
+      {/* Tourist Count Indicator */}
+      <div className="absolute bottom-3 left-3 bg-blue-600/90 text-white px-3 py-2 rounded-lg text-xs font-medium shadow-lg">
+        <div className="flex items-center gap-2">
+          <span>👥</span>
+          <span>{clusters.reduce((sum, cluster) => sum + cluster.count, 0)} Active Tourists</span>
+        </div>
+      </div>
+
+      {/* Map Controls Info */}
+      <div className="absolute bottom-3 right-3 bg-gray-800/80 text-white px-3 py-2 rounded-lg text-xs shadow-lg">
+        <div className="text-center">
+          <div>🗺️ Map Controls</div>
+          <div className="text-xs opacity-75">Click markers for details</div>
+        </div>
       </div>
     </div>
   );
