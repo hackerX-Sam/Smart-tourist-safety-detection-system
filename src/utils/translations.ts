@@ -118,7 +118,7 @@ export interface Translations {
 export const translations: Record<string, Translations> = {
   en: {
     // Navigation
-    appTitle: "Smart Tourist Safety System",
+    appTitle: "SafeYatri",
     mobileApp: "Mobile App",
     panicAlert: "Panic Alert",
     authorityDashboard: "Authority Dashboard",
@@ -232,7 +232,7 @@ export const translations: Record<string, Translations> = {
   },
   fr: {
     // Navigation
-    appTitle: "Système Intelligent de Sécurité Touristique",
+    appTitle: "SafeYatri",
     mobileApp: "Application Mobile",
     panicAlert: "Alerte de Panique",
     authorityDashboard: "Tableau de Bord des Autorités",
@@ -346,7 +346,7 @@ export const translations: Record<string, Translations> = {
   },
   de: {
     // Navigation
-    appTitle: "Intelligentes Touristen-Sicherheitssystem",
+    appTitle: "SafeYatri",
     mobileApp: "Mobile App",
     panicAlert: "Panik-Alarm",
     authorityDashboard: "Behörden-Dashboard",
@@ -460,7 +460,7 @@ export const translations: Record<string, Translations> = {
   },
   ja: {
     // Navigation
-    appTitle: "スマート観光客安全システム",
+    appTitle: "SafeYatri",
     mobileApp: "モバイルアプリ",
     panicAlert: "パニックアラート",
     authorityDashboard: "当局ダッシュボード",
@@ -574,7 +574,7 @@ export const translations: Record<string, Translations> = {
   },
   hi: {
     // Navigation
-    appTitle: "स्मार्ट पर्यटक सुरक्षा प्रणाली",
+    appTitle: "SafeYatri",
     mobileApp: "मोबाइल ऐप",
     panicAlert: "पैनिक अलर्ट",
     authorityDashboard: "प्राधिकरण डैशबोर्ड",
@@ -688,7 +688,7 @@ export const translations: Record<string, Translations> = {
   },
   es: {
     // Navigation
-    appTitle: "Sistema Inteligente de Seguridad Turística",
+    appTitle: "SafeYatri",
     mobileApp: "Aplicación Móvil",
     panicAlert: "Alerta de Pánico",
     authorityDashboard: "Panel de Autoridades",

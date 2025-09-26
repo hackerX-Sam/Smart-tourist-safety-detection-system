@@ -281,7 +281,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                 <Shield className="w-6 h-6 text-white" />
               </div>
               <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                Smart Tourist Safety
+                SafeYatri
               </h1>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-300">

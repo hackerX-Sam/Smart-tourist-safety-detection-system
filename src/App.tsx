@@ -190,7 +190,7 @@ const AuthenticatedApp: React.FC = () => {
       <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="text-center text-gray-600 dark:text-gray-300">
-            <p className="mb-2">Smart Tourist Safety Monitoring & Incident Response System</p>
+            <p className="mb-2">SafeYatri - Smart Tourist Safety Monitoring & Incident Response System</p>
             <p className="text-sm">Hackathon Demo - Advanced IoT Integration & AI-Powered Safety Analytics</p>
             <div className="flex justify-center gap-6 mt-4 text-sm">
               <span>🔒 End-to-End Encryption</span>
