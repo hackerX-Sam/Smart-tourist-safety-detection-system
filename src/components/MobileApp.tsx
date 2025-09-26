@@ -224,7 +224,7 @@ const MobileApp: React.FC<MobileAppProps> = ({ onPanicTrigger }) => {
             <li>• Alerts local authorities</li>
             <li>• Activates emergency response</li>
           </ul>
-        </p>
+        </div>
       </div>
     </div>
   );
